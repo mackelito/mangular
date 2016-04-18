@@ -1,0 +1,22 @@
+{
+  "name": "mangular",
+  "description": "Angular service for Magento 2",
+  "main": "./dist/mangular.min.js",
+  "authors": [
+    "Markus Thiel <markus@thiels.se>"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "Angular",
+    "Magento",
+    "Service"
+  ],
+  "homepage": "https://github.com/mackelito/mangular",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

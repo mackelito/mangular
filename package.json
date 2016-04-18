@@ -4,7 +4,13 @@
   "description": "Angular service for Magento 2",
   "main": "./dist/mangular.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf dist",
+    "lint": "jscs src/*.js --preset=google",
+    "prebuild": "npm run clean; npm run lint",
+    "build": "mkdir dist; npm run build:js; npm run build:min",
+    "build:js": "uglifyjs src/*.js -b 'indent-level=2, quote_style=1' -o dist/mangular.js",
+    "build:min": "uglifyjs dist/mangular.js -m -o dist/mangular.min.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +26,11 @@
   "bugs": {
     "url": "https://github.com/mackelito/mangular/issues"
   },
-  "homepage": "https://github.com/mackelito/mangular#readme"
+  "homepage": "https://github.com/mackelito/mangular#readme",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "jscs": "^3.0.3",
+    "rimraf": "^2.5.2",
+    "uglify-js": "^2.6.2"
+  }
 }

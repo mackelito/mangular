@@ -1,0 +1,24 @@
+{
+  "name": "mangular",
+  "version": "0.0.1",
+  "description": "Angular service for Magento 2",
+  "main": "./dist/mangular.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mackelito/mangular.git"
+  },
+  "keywords": [
+    "Angular",
+    "Magento",
+    "Service"
+  ],
+  "author": "Markus Thiel <markus@thiels.se>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mackelito/mangular/issues"
+  },
+  "homepage": "https://github.com/mackelito/mangular#readme"
+}

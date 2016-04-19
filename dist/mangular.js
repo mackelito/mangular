@@ -37,7 +37,7 @@
     return service;
     function getProducts(numberOfProducts, $stateParams) {
       $log.info('--- Featching products start ---');
-      $log.info('Featching ' + numberOfProducts + ' products from ' + $stateParams);
+      $log.info('Featching ' + numberOfProducts + ' products from category ' + $stateParams);
       $log.info('--- Featching products end ---');
       return Restangular.all('/products?searchCriteria[page_size]=' + numberOfProducts).customGET();
     }

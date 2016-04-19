@@ -20,7 +20,7 @@
 
     function getProducts(numberOfProducts, $stateParams) {
       $log.info('--- Featching products start ---');
-      $log.info('Featching ' + numberOfProducts + ' products from ' +
+      $log.info('Featching ' + numberOfProducts + ' products from category ' +
         $stateParams);
       // var categoryId = '/categories/' + $stateParams.categoryId;
       $log.info('--- Featching products end ---');

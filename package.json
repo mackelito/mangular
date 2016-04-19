@@ -2,7 +2,7 @@
   "name": "mangular",
   "version": "0.0.1",
   "description": "Angular service for Magento 2",
-  "main": "./dist/mangular.min.js",
+  "main": "./dist/mangular.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist",

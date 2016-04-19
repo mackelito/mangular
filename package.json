@@ -10,7 +10,8 @@
     "prebuild": "npm run clean; npm run lint",
     "build": "mkdir dist; npm run build:js; npm run build:min",
     "build:js": "uglifyjs src/*.js -b 'indent-level=2, quote_style=1' -o dist/mangular.js",
-    "build:min": "uglifyjs dist/mangular.js -m -o dist/mangular.min.js"
+    "build:min": "watchify src/*.js -o dist/mangular.min.js",
+    "watch": "watch 'npm run build' src/"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "browserify": "^13.0.0",
     "jscs": "^3.0.3",
     "rimraf": "^2.5.2",
-    "uglify-js": "^2.6.2"
+    "uglify-js": "^2.6.2",
+    "watch": "^0.17.1"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "mangular",
   "description": "Angular service for Magento 2",
-  "main": "./dist/mangular.min.js",
+  "main": "./dist/mangular.js",
   "authors": [
     "Markus Thiel <markus@thiels.se>"
   ],

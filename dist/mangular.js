@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('mangular').service('Categories', Service);
+  angular.module('mangular', []).service('Categories', Service);
   Service.$inject = [ 'Restangular', '$log' ];
   function Service(Restangular, $log) {
     $log.info('--- Categories service start ---');
@@ -26,7 +26,7 @@
 
 (function() {
   'use strict';
-  angular.module('mangular').service('Products', Service);
+  angular.module('mangular', []).service('Products', Service);
   Service.$inject = [ 'Restangular', '$stateParams', '$log' ];
   function Service(Restangular, $stateParams, $log) {
     $log.info('--- Products service start ---');

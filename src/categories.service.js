@@ -22,6 +22,7 @@
       $log.info('--- Featching categories start ---');
       $log.info('Featching categories:');
       $log.info('--- Featching categories end ---');
+
       return Restangular.all('categories').customGET();
     }
 
@@ -29,8 +30,11 @@
       $log.info('--- Featching category start ---');
       $log.info('--- Featching category ' + id + ' ---');
       $log.info('--- Featching category end ---');
+
       return Restangular.one('category/' + id).customGET();
     }
+
+    $log.info('--- Categories service end ---');
 
   }
 })();

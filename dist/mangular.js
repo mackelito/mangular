@@ -21,6 +21,7 @@
       $log.info('--- Featching category end ---');
       return Restangular.one('category/' + id).customGET();
     }
+    $log.info('--- Categories service end ---');
   }
 })();
 

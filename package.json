@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist",
     "lint": "jscs src/*.js --preset=google",
-    "prebuild": "npm run clean; npm run lint",
-    "build": "mkdir dist; npm run build:js; npm run build:min",
+    "prebuild": "npm run clean & npm run lint",
+    "build": "mkdir dist; npm run build:js & npm run build:min",
     "build:js": "uglifyjs src/*.js -b 'indent-level=2, quote_style=1' -o dist/mangular.js",
     "build:min": "uglifyjs src/*.js -o dist/mangular.min.js",
     "watch": "watch 'npm run build' src/"
@@ -29,7 +29,6 @@
   },
   "homepage": "https://github.com/mackelito/mangular#readme",
   "devDependencies": {
-    "browserify": "^13.0.0",
     "jscs": "^3.0.3",
     "rimraf": "^2.5.2",
     "uglify-js": "^2.6.2",

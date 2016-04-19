@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('mangular', [])
+    .module('mangular')
     .service('Products', Service);
 
   Service.$inject = ['Restangular','$stateParams','$log'];

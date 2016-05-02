@@ -20,7 +20,7 @@
 
     function getCategories() {
       $log.info('--- Featching categories start ---');
-      $log.info('Featching categories:');
+      $log.info('--- Featching categories: ---');
       $log.info('--- Featching categories end ---');
 
       return Restangular.all('categories').customGET();

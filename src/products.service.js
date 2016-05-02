@@ -18,15 +18,32 @@
 
     return service;
 
-    function getProducts(numberOfProducts, $stateParams) {
+    function getProducts(numberOfProducts, categoryId) {
+      var query = 'products';
+      var category = '';
+      var defaultNumberOfProducts = '5';
+      var catId = '';
+      var noOfProducts = '';
+
+      if (categoryId) {
+        // query = '/categories/' + categoryId + '/' + query;
+        catId = 'category_id=' + categoryId;
+      }
+
+      if (numberOfProducts) {
+        noOfProducts = 'searchCriteria[page_size]=' + numberOfProducts;
+      } else {
+        noOfProducts = 'searchCriteria[page_size]=' + defaultNumberOfProducts;
+      }
+
       $log.info('--- Featching products start ---');
       $log.info('Featching ' + numberOfProducts + ' products from category ' +
         $stateParams);
-      // var categoryId = '/categories/' + $stateParams.categoryId;
       $log.info('--- Featching products end ---');
 
-      return Restangular.all('/products?searchCriteria[page_size]=' +
-        numberOfProducts).customGET();
+      query += ['?',catId,noOfProducts].join('&');
+      return Restangular.all(query).customGET();
+
     }
 
     function getProduct(sku) {

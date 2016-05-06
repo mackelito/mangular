@@ -18,30 +18,32 @@
 
     return service;
 
-    function getProducts(numberOfProducts, categoryId) {
+    function getProducts(paramsData) {
+      var params = paramsData;
       var query = 'products';
       var category = '';
-      var defaultNumberOfProducts = '5';
+      var defaultNumberOfProducts = '50';
       var catId = '';
       var noOfProducts = '';
 
-      if (categoryId) {
-        // query = '/categories/' + categoryId + '/' + query;
-        catId = 'category_id=' + categoryId;
+      if (params.category) {
+        catId = '&searchCriteria[filter_groups][0][filters][0][field]=' +
+        'category_id&searchCriteria[filter_groups][0][filters][0][value]=' +
+        params.category;
       }
 
-      if (numberOfProducts) {
-        noOfProducts = 'searchCriteria[page_size]=' + numberOfProducts;
+      if (params.limit) {
+        noOfProducts = '[page_size]=' + params.limit;
       } else {
-        noOfProducts = 'searchCriteria[page_size]=' + defaultNumberOfProducts;
+        noOfProducts = '[page_size]=' + defaultNumberOfProducts;
       }
-
+      //searchCriteria[page_size]=5&searchCriteria[filter_groups][0][filters][0][field]=category_id&searchCriteria[filter_groups][0][filters][0][value]=2&searchCriteria[filter_groups][0][filters][0][condition_type]=in
       $log.info('--- Featching products start ---');
-      $log.info('Featching ' + numberOfProducts + ' products from category ' +
+      $log.info('Featching ' + params.limit + ' products from category ' +
         $stateParams);
       $log.info('--- Featching products end ---');
 
-      query += ['?',catId,noOfProducts].join('&');
+      query += '?searchCriteria' + noOfProducts + catId;
       return Restangular.all(query).customGET();
 
     }

@@ -3,7 +3,7 @@
 
   angular
     .module('mangular')
-    .service('Cart', Service);
+    .factory('Cart', Service);
 
   Service.$inject = ['Restangular','$log'];
 
@@ -14,7 +14,6 @@
     var cart = {};
     var createNewCart = Restangular.all('guest-carts');
     var cartId = createNewCart.post().then(function(cartId) {
-      //   cart.id = cartId;
       return cartId;
     });
 
@@ -30,22 +29,21 @@
       $log.info('Featching cart');
       $log.info('--- Featching cart end ---');
 
-      //   cartId.then(function(id) {
-      //     cart = Restangular.all('guest-carts').one(id).one('items').customGET();
-      //     console.log('the cart:');
-      //     console.log(cart);
-      //     return cart;
-      //   });
+      var cartItems = cartId.then(function(id) {
+        cart = Restangular.all('guest-carts').one(id).one('items').customGET();
+        return cart;
+      });
+
+      return cartItems;
+
     }
 
     function addItem(product) {
-      console.log('product');
-      console.log(product);
       $log.info('--- Add to cart start ---');
       $log.info('Adding to cart');
       $log.info('--- Add to cart end ---');
       cartId.then(function(id) {
-        console.log(id);
+        console.log('Adding item to cart:');
         console.log(cart);
         var data = {
               'cartItem': {
@@ -54,8 +52,14 @@
                 'quote_id': id
               }
             };
-        // cart.items.push(data);
-        Restangular.one('guest-carts').one(id).one('items').customPOST(data);
+        Restangular.one('guest-carts').one(id).one('items').customPOST(data)
+        .then(function(response) {
+          var cartItems = cartId.then(function(id) {
+              cart = Restangular.all('guest-carts').one(id).one('items').customGET();
+              return cart;
+            });
+          return cartItems;
+        });
       });
     }
 

@@ -5,7 +5,7 @@
 
 (function() {
   'use strict';
-  angular.module('mangular').service('Cart', Service);
+  angular.module('mangular').factory('Cart', Service);
   Service.$inject = [ 'Restangular', '$log' ];
   function Service(Restangular, $log) {
     $log.info('--- Cart service start ---');
@@ -23,15 +23,18 @@
       $log.info('--- Featching cart start ---');
       $log.info('Featching cart');
       $log.info('--- Featching cart end ---');
+      var cartItems = cartId.then(function(id) {
+        cart = Restangular.all('guest-carts').one(id).one('items').customGET();
+        return cart;
+      });
+      return cartItems;
     }
     function addItem(product) {
-      console.log('product');
-      console.log(product);
       $log.info('--- Add to cart start ---');
       $log.info('Adding to cart');
       $log.info('--- Add to cart end ---');
       cartId.then(function(id) {
-        console.log(id);
+        console.log('Adding item to cart:');
         console.log(cart);
         var data = {
           cartItem: {
@@ -40,7 +43,13 @@
             quote_id: id
           }
         };
-        Restangular.one('guest-carts').one(id).one('items').customPOST(data);
+        Restangular.one('guest-carts').one(id).one('items').customPOST(data).then(function(response) {
+          var cartItems = cartId.then(function(id) {
+            cart = Restangular.all('guest-carts').one(id).one('items').customGET();
+            return cart;
+          });
+          return cartItems;
+        });
       });
     }
     $log.info('--- Cart service end ---');
@@ -85,24 +94,25 @@
       getProduct: getProduct
     };
     return service;
-    function getProducts(numberOfProducts, categoryId) {
+    function getProducts(paramsData) {
+      var params = paramsData;
       var query = 'products';
       var category = '';
-      var defaultNumberOfProducts = '5';
+      var defaultNumberOfProducts = '50';
       var catId = '';
       var noOfProducts = '';
-      if (categoryId) {
-        catId = 'category_id=' + categoryId;
+      if (params.category) {
+        catId = '&searchCriteria[filter_groups][0][filters][0][field]=' + 'category_id&searchCriteria[filter_groups][0][filters][0][value]=' + params.category;
       }
-      if (numberOfProducts) {
-        noOfProducts = 'searchCriteria[page_size]=' + numberOfProducts;
+      if (params.limit) {
+        noOfProducts = '[page_size]=' + params.limit;
       } else {
-        noOfProducts = 'searchCriteria[page_size]=' + defaultNumberOfProducts;
+        noOfProducts = '[page_size]=' + defaultNumberOfProducts;
       }
       $log.info('--- Featching products start ---');
-      $log.info('Featching ' + numberOfProducts + ' products from category ' + $stateParams);
+      $log.info('Featching ' + params.limit + ' products from category ' + $stateParams);
       $log.info('--- Featching products end ---');
-      query += [ '?', catId, noOfProducts ].join('&');
+      query += '?searchCriteria' + noOfProducts + catId;
       return Restangular.all(query).customGET();
     }
     function getProduct(sku) {

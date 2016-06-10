@@ -3,32 +3,37 @@
 
   angular
     .module('mangular')
-    .factory('Cart', Service);
+    .factory('Cart', Factory);
 
-  Service.$inject = ['Restangular','$log'];
+  Factory.$inject = ['Restangular', '$log'];
 
   /* @ngInject */
-  function Service(Restangular, $log) {
+  function Factory(Restangular, $log) {
     $log.info('--- Cart service start ---');
 
-    var cart = {};
-    var createNewCart = Restangular.all('guest-carts');
-    var cartId = createNewCart.post().then(function(cartId) {
-      return cartId;
-    });
-
     var service = {
+      getCart: getCart,
       getItems: getItems,
-      addItem: addItem
+      addItem: addItem,
+      createNewCart: createNewCart
     };
+
+    var cart = {};
 
     return service;
 
-    function getItems() {
-      $log.info('--- Featching cart start ---');
-      $log.info('Featching cart');
-      $log.info('--- Featching cart end ---');
+    function getCart(cartId) {
+      $log.info('--- Featching cart ---');
+      // var cart = Restangular.all('guest-carts').one(cartId).customGET().then(function(cartData) {
+      //   console.log('cartData');
+      //   console.log(cartData);
+      //   return cartData;
+      // });
+      return Restangular.all('guest-carts').one(cartId).customGET();
+    }
 
+    function getItems(cartId) {
+      $log.info('--- Featching cart items ---');
       var cartItems = cartId.then(function(id) {
         cart = Restangular.all('guest-carts').one(id).one('items').customGET();
         return cart;
@@ -38,32 +43,34 @@
 
     }
 
-    function addItem(product) {
-      $log.info('--- Add to cart start ---');
-      $log.info('Adding to cart');
-      $log.info('--- Add to cart end ---');
-      cartId.then(function(id) {
-        console.log('Adding item to cart:');
-        console.log(cart);
+    function addItem(product, cartId) {
+      $log.info('--- Add to cart ---');
+      cartId.then(function(cartId) {
+        $log.info('Adding item to cart:');
         var data = {
               'cartItem': {
                 'sku': product.sku,
                 'qty': 1,
-                'quote_id': id
+                'quote_id': cartId
               }
             };
-        Restangular.one('guest-carts').one(id).one('items').customPOST(data)
+        Restangular.one('guest-carts').one(cartId).one('items').customPOST(data)
         .then(function(response) {
-          var cartItems = cartId.then(function(id) {
-              cart = Restangular.all('guest-carts').one(id).one('items').customGET();
-              return cart;
-            });
-          return cartItems;
+          $log.info('Added item to cart:');
+          // cart = Restangular.all('guest-carts').one(cartId).customGET();
+          // $log.info(cart);
+          // return cart;
+          cart = Restangular.all('guest-carts').one(cartId).customGET();
         });
       });
     }
 
-    $log.info('--- Cart service end ---');
+    function createNewCart() {
+      var createNewCart = Restangular.all('guest-carts');
+      var cartId = createNewCart.post();
+      return cartId;
+    }
 
+    $log.info('--- Cart service end ---');
   }
 })();

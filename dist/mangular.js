@@ -5,52 +5,51 @@
 
 (function() {
   'use strict';
-  angular.module('mangular').factory('Cart', Service);
-  Service.$inject = [ 'Restangular', '$log' ];
-  function Service(Restangular, $log) {
+  angular.module('mangular').factory('Cart', Factory);
+  Factory.$inject = [ 'Restangular', '$log' ];
+  function Factory(Restangular, $log) {
     $log.info('--- Cart service start ---');
-    var cart = {};
-    var createNewCart = Restangular.all('guest-carts');
-    var cartId = createNewCart.post().then(function(cartId) {
-      return cartId;
-    });
     var service = {
+      getCart: getCart,
       getItems: getItems,
-      addItem: addItem
+      addItem: addItem,
+      createNewCart: createNewCart
     };
+    var cart = {};
     return service;
-    function getItems() {
-      $log.info('--- Featching cart start ---');
-      $log.info('Featching cart');
-      $log.info('--- Featching cart end ---');
+    function getCart(cartId) {
+      $log.info('--- Featching cart ---');
+      return Restangular.all('guest-carts').one(cartId).customGET();
+    }
+    function getItems(cartId) {
+      $log.info('--- Featching cart items ---');
       var cartItems = cartId.then(function(id) {
         cart = Restangular.all('guest-carts').one(id).one('items').customGET();
         return cart;
       });
       return cartItems;
     }
-    function addItem(product) {
-      $log.info('--- Add to cart start ---');
-      $log.info('Adding to cart');
-      $log.info('--- Add to cart end ---');
-      cartId.then(function(id) {
-        console.log('Adding item to cart:');
-        console.log(cart);
+    function addItem(product, cartId) {
+      $log.info('--- Add to cart ---');
+      cartId.then(function(cartId) {
+        $log.info('Adding item to cart:');
         var data = {
           cartItem: {
             sku: product.sku,
             qty: 1,
-            quote_id: id
+            quote_id: cartId
           }
         };
-        Restangular.one('guest-carts').one(id).one('items').customPOST(data).then(function(response) {
-          var cartItems = cartId.then(function(id) {
-            cart = Restangular.all('guest-carts').one(id).one('items').customGET();
-            return cart;
-          });
-          return cartItems;
+        Restangular.one('guest-carts').one(cartId).one('items').customPOST(data).then(function(response) {
+          $log.info('Added item to cart:');
+          cart = Restangular.all('guest-carts').one(cartId).customGET();
         });
       });
+    }
+    function createNewCart() {
+      var createNewCart = Restangular.all('guest-carts');
+      var cartId = createNewCart.post();
+      return cartId;
     }
     $log.info('--- Cart service end ---');
   }

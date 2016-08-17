@@ -1,5 +1,7 @@
 (function() {
   'use strict';
   angular
-    .module('mangular', []);
+    .module('mangular', [
+        'LocalForageModule'
+    ]);
 })();

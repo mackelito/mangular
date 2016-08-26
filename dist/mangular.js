@@ -1,38 +1,57 @@
 (function() {
   'use strict';
-  angular.module('mangular', []);
+  angular.module('mangular', [ 'LocalForageModule' ]).run(runBlock);
+  function runBlock($log, $localForage, Cart) {
+    $localForage.getItem('cartId').then(function(data) {
+      if (!data) {
+        Cart.createNewCart().then(function(cartId) {
+          $localForage.setItem('cartId', cartId);
+        });
+      }
+    });
+    $log.debug('mangular runBlock end');
+  }
 })();
 
 (function() {
   'use strict';
   angular.module('mangular').factory('Cart', Factory);
-  Factory.$inject = [ 'Restangular', '$log' ];
-  function Factory(Restangular, $log) {
-    $log.info('--- Cart service start ---');
+  Factory.$inject = [ 'Restangular', '$log', '$localForage', '$rootScope' ];
+  function Factory(Restangular, $log, $localForage, $rootScope) {
     var service = {
-      getCart: getCart,
+      getCartId: getCartId,
+      getTotals: getTotals,
       getItems: getItems,
       addItem: addItem,
+      removeItem: removeItem,
       createNewCart: createNewCart
     };
+    $localForage.getItem('cartId').then(function(id) {
+      service.cartId = id;
+    });
     var cart = {};
+    $localForage.getItem('cartId').then(function(id) {
+      cart.id = id;
+      service.cartId = id;
+    });
     return service;
-    function getCart(cartId) {
-      $log.info('--- Featching cart ---');
-      return Restangular.all('guest-carts').one(cartId).customGET();
+    function getCartId() {
+      return $localForage.getItem('cartId');
     }
-    function getItems(cartId) {
-      $log.info('--- Featching cart items ---');
-      var cartItems = cartId.then(function(id) {
-        cart = Restangular.all('guest-carts').one(id).one('items').customGET();
-        return cart;
+    function getTotals() {
+      var getTotals = getCartId().then(function(id) {
+        return Restangular.all('guest-carts/' + id + '/totals').customGET();
+      });
+      return getTotals;
+    }
+    function getItems() {
+      var cartItems = getCartId().then(function(id) {
+        return Restangular.all('guest-carts/' + id + '/items').customGET();
       });
       return cartItems;
     }
     function addItem(product, cartId) {
-      $log.info('--- Add to cart ---');
-      cartId.then(function(cartId) {
-        $log.info('Adding item to cart:');
+      $localForage.getItem('cartId').then(function(cartId) {
         var data = {
           cartItem: {
             sku: product.sku,
@@ -41,8 +60,17 @@
           }
         };
         Restangular.one('guest-carts').one(cartId).one('items').customPOST(data).then(function(response) {
-          $log.info('Added item to cart:');
-          cart = Restangular.all('guest-carts').one(cartId).customGET();
+          $log.info('cartUpdated:');
+          $rootScope.$broadcast('cartUpdated', response);
+        });
+      });
+    }
+    function removeItem(itemId) {
+      console.log(itemId);
+      var cartItems = getCartId().then(function(cartId) {
+        return Restangular.all('guest-carts/' + cartId + '/items/' + itemId).remove().then(function(response) {
+          $log.info('cartUpdated:');
+          $rootScope.$broadcast('cartUpdated', response);
         });
       });
     }
@@ -60,25 +88,17 @@
   angular.module('mangular').service('Categories', Service);
   Service.$inject = [ 'Restangular', '$log' ];
   function Service(Restangular, $log) {
-    $log.info('--- Categories service start ---');
     var service = {
       getCategories: getCategories,
       getCategory: getCategory
     };
     return service;
     function getCategories() {
-      $log.info('--- Featching categories start ---');
-      $log.info('--- Featching categories: ---');
-      $log.info('--- Featching categories end ---');
       return Restangular.all('categories').customGET();
     }
     function getCategory(id) {
-      $log.info('--- Featching category start ---');
-      $log.info('--- Featching category ' + id + ' ---');
-      $log.info('--- Featching category end ---');
       return Restangular.one('category/' + id).customGET();
     }
-    $log.info('--- Categories service end ---');
   }
 })();
 
@@ -87,7 +107,6 @@
   angular.module('mangular').service('Products', Service);
   Service.$inject = [ 'Restangular', '$stateParams', '$log' ];
   function Service(Restangular, $stateParams, $log) {
-    $log.info('--- Products service start ---');
     var service = {
       getProducts: getProducts,
       getProduct: getProduct
@@ -108,18 +127,11 @@
       } else {
         noOfProducts = '[page_size]=' + defaultNumberOfProducts;
       }
-      $log.info('--- Featching products start ---');
-      $log.info('Featching ' + params.limit + ' products from category ' + $stateParams);
-      $log.info('--- Featching products end ---');
       query += '?searchCriteria' + noOfProducts + catId;
       return Restangular.all(query).customGET();
     }
     function getProduct(sku) {
-      $log.info('--- Featching product start ---');
-      $log.info('Featching product ' + sku);
-      $log.info('--- Featching product end ---');
       return Restangular.one('products/' + sku).customGET();
     }
-    $log.info('--- Products service end ---');
   }
 })();

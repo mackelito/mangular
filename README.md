@@ -21,7 +21,7 @@ A Factory for Angular 1 to consume the magento 2 rest api
 
 
 
-#### Developing locally (bower)
+# Developing locally (bower)
 -fork the project
 -cd into the dir
 -run "bower link"

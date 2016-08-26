@@ -5,48 +5,52 @@
     .module('mangular')
     .factory('Cart', Factory);
 
-  Factory.$inject = ['Restangular', '$log'];
+  Factory.$inject = ['Restangular', '$log', '$localForage', '$rootScope'];
 
   /* @ngInject */
-  function Factory(Restangular, $log) {
-    $log.info('--- Cart service start ---');
+  function Factory(Restangular, $log, $localForage, $rootScope) {
 
     var service = {
-      getCart: getCart,
+      getCartId: getCartId,
+      getTotals: getTotals,
       getItems: getItems,
       addItem: addItem,
+      removeItem: removeItem,
       createNewCart: createNewCart
     };
 
+    $localForage.getItem('cartId').then(function(id) {
+      service.cartId = id;
+    });
+
     var cart = {};
+    $localForage.getItem('cartId').then(function(id) {
+      cart.id = id;
+      service.cartId = id;
+    });
 
     return service;
 
-    function getCart(cartId) {
-      $log.info('--- Featching cart ---');
-      // var cart = Restangular.all('guest-carts').one(cartId).customGET().then(function(cartData) {
-      //   console.log('cartData');
-      //   console.log(cartData);
-      //   return cartData;
-      // });
-      return Restangular.all('guest-carts').one(cartId).customGET();
+    function getCartId() {
+      return $localForage.getItem('cartId');
     }
 
-    function getItems(cartId) {
-      $log.info('--- Featching cart items ---');
-      var cartItems = cartId.then(function(id) {
-        cart = Restangular.all('guest-carts').one(id).one('items').customGET();
-        return cart;
+    function getTotals() {
+      var getTotals = getCartId().then(function(id){
+        return Restangular.all('guest-carts/'+ id + '/totals').customGET();
       });
+      return getTotals;
+    }
 
+    function getItems() {
+      var cartItems = getCartId().then(function(id){
+        return Restangular.all('guest-carts/'+ id + '/items').customGET();
+      });
       return cartItems;
-
     }
 
     function addItem(product, cartId) {
-      $log.info('--- Add to cart ---');
-      cartId.then(function(cartId) {
-        $log.info('Adding item to cart:');
+      $localForage.getItem('cartId').then(function(cartId) {
         var data = {
               'cartItem': {
                 'sku': product.sku,
@@ -56,13 +60,22 @@
             };
         Restangular.one('guest-carts').one(cartId).one('items').customPOST(data)
         .then(function(response) {
-          $log.info('Added item to cart:');
-          // cart = Restangular.all('guest-carts').one(cartId).customGET();
-          // $log.info(cart);
-          // return cart;
-          cart = Restangular.all('guest-carts').one(cartId).customGET();
+          $log.info('cartUpdated:');
+          $rootScope.$broadcast('cartUpdated', response);
         });
       });
+    }
+
+    function removeItem(itemId) {
+      console.log(itemId);
+      var cartItems = getCartId().then(function(cartId){
+        return Restangular.all('guest-carts/'+ cartId + '/items/' + itemId).remove()
+        .then(function(response) {
+          $log.info('cartUpdated:');
+          $rootScope.$broadcast('cartUpdated', response);
+        });
+      });
+      // return cartItems;
     }
 
     function createNewCart() {

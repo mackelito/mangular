@@ -20,7 +20,8 @@
   "keywords": [
     "Angular",
     "Magento",
-    "Service"
+    "Service",
+    "Factory"
   ],
   "author": "Markus Thiel <markus@thiels.se>",
   "license": "ISC",

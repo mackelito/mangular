@@ -1,4 +1,4 @@
-# mangular
+# mAngular
 A Factory for Angular 1 to consume the magento 2 rest api
 
 
@@ -18,7 +18,7 @@ A Factory for Angular 1 to consume the magento 2 rest api
 ## Products
       getProducts: getProducts,
       getProduct: getProduct
-
+<hr>
 ## Developing locally (bower)
 -fork the project
 -cd into the dir

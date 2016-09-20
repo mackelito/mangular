@@ -27,3 +27,6 @@ A Factory for Angular 1 to consume the magento 2 rest api
 -run "bower link mangular"
 
 now the changes you do on the services should be reflected directly in you project, just dont forget to run "npm run bulid" or "npm run watch" in the mangular folder
+
+If you are having problems with this try this instead:
+In you bower.json, add ""mangular": "path/to/mangular eg. like this file:///Users/david/my-projects/mangular/.git","

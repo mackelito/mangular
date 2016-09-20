@@ -46,9 +46,9 @@
     }
     function getItems() {
       var cartItems = getCartId().then(function(id) {
-        return Restangular.withHttpConfig({
+        return Restangular.all('guest-carts/' + id + '/items').withHttpConfig({
           cache: false
-        }).all('guest-carts/' + id + '/items').customGET();
+        }).customGET();
       });
       return cartItems;
     }

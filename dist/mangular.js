@@ -106,6 +106,52 @@
 
 (function() {
   'use strict';
+  angular.module('mangular').factory('ContentRestangular', function(Restangular) {
+    return Restangular.withConfig(function(RestangularConfigurer) {
+      RestangularConfigurer.setBaseUrl('magento/');
+    });
+  }).service('Content', Service);
+  Service.$inject = [ 'ContentRestangular' ];
+  function Service(ContentRestangular) {
+    var service = {
+      getContent: getContent
+    };
+    return service;
+    function getContent(url) {
+      return ContentRestangular.one(url + '/content').customGET();
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+  angular.module('mangular').service('Menu', Service);
+  Service.$inject = [ 'Restangular' ];
+  function Service(Restangular) {
+    var service = {
+      getMenuItem: getMenuItem,
+      getMenu: getMenu
+    };
+    return service;
+    function getMenuItem(url) {
+      return Restangular.one('store/1/menu/').customGET().then(function(menu) {
+        var result;
+        angular.forEach(menu, function(item) {
+          if (item.url_key === url) {
+            result = item;
+          }
+        });
+        return result;
+      });
+    }
+    function getMenu(url) {
+      return Restangular.one('store/1/menu/').customGET();
+    }
+  }
+})();
+
+(function() {
+  'use strict';
   angular.module('mangular').service('Products', Service);
   Service.$inject = [ 'Restangular', '$stateParams', '$log' ];
   function Service(Restangular, $stateParams, $log) {

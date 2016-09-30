@@ -37,7 +37,7 @@
 
     function getTotals() {
       var getTotals = getCartId().then(function(id){
-        return Restangular.all('guest-carts/'+ id + '/totals').customGET();
+        return Restangular.all('guest-carts/'+ id + '/totals').withHttpConfig({cache: false}).customGET();
       });
       return getTotals;
     }

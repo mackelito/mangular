@@ -22,7 +22,7 @@
     }
 
     function getCategory(id) {
-      return Restangular.one('category/' + id).customGET();
+      return Restangular.one('categories/' + id).customGET();
     }
 
   }

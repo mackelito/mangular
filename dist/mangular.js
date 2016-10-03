@@ -1,13 +1,16 @@
 (function() {
   'use strict';
   angular.module('mangular', [ 'LocalForageModule' ]).run(runBlock);
-  function runBlock($log, $localForage, Cart) {
+  function runBlock($log, $localForage, Cart, UrlRewrite) {
     $localForage.getItem('cartId').then(function(data) {
       if (!data) {
         Cart.createNewCart().then(function(cartId) {
           $localForage.setItem('cartId', cartId);
         });
       }
+    });
+    UrlRewrite.getUrlRewritesByTypes([ 'cms-page', 'category' ]).then(function(urlRewrites) {
+      $localForage.setItem('urlRewrites', urlRewrites);
     });
     $log.debug('mangular runBlock end');
   }
@@ -175,12 +178,23 @@
 (function() {
   'use strict';
   angular.module('mangular').service('UrlRewrite', Service);
-  Service.$inject = [ 'Restangular' ];
-  function Service(Restangular) {
+  Service.$inject = [ 'Restangular', '$localForage', '$filter' ];
+  function Service(Restangular, $localForage, $filter) {
     return {
-      getUrlRewrite: function(path) {
-        return Restangular.one('url-rewrite/find-one-by-request-path/' + path).customGET();
-      }
+      getUrlRewrite: getUrlRewrite,
+      getUrlRewritesByTypes: getUrlRewritesByTypes
     };
+    function getUrlRewrite(path) {
+      return $localForage.getItem('urlRewrites').then(function(urlRewrites) {
+        return $filter('filter')(urlRewrites, {
+          request_path: path
+        })[0] || Restangular.one('url-rewrite/find-one-by-request-path/' + path).customGET();
+      });
+    }
+    function getUrlRewritesByTypes(types) {
+      return Restangular.one('url-rewrite/find-all-by-entity-type').customPOST({
+        entity_types: types
+      });
+    }
   }
 })();

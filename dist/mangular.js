@@ -43,7 +43,9 @@
     }
     function getTotals() {
       var getTotals = getCartId().then(function(id) {
-        return Restangular.all('guest-carts/' + id + '/totals').customGET();
+        return Restangular.all('guest-carts/' + id + '/totals').withHttpConfig({
+          cache: false
+        }).customGET();
       });
       return getTotals;
     }
@@ -102,7 +104,7 @@
       return Restangular.all('categories').customGET();
     }
     function getCategory(id) {
-      return Restangular.one('category/' + id).customGET();
+      return Restangular.one('categories/' + id).customGET();
     }
   }
 })();
@@ -123,6 +125,17 @@
     function getContent(url) {
       return ContentRestangular.one(url + '/content').customGET();
     }
+  }
+})();
+
+(function() {
+  'use strict';
+  angular.module('mangular').factory('_', Factory);
+  Factory.$inject = [ '$window' ];
+  function Factory($window) {
+    var _ = $window._;
+    console.log('_ (lodash loaded)');
+    return _;
   }
 })();
 

@@ -12,7 +12,8 @@
 
     var service = {
       getProducts: getProducts,
-      getProduct: getProduct
+      getProduct: getProduct,
+      getProductById: getProductById
     };
 
     return service;
@@ -44,6 +45,10 @@
 
     function getProduct(sku) {
       return Restangular.one('products/' + sku).customGET();
+    }
+
+    function getProductById(id){
+        return Restangular.one('product-views/' + id).customGET();
     }
 
 

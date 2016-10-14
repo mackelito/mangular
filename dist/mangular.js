@@ -161,7 +161,8 @@
   function Service(Restangular, $stateParams, $log) {
     var service = {
       getProducts: getProducts,
-      getProduct: getProduct
+      getProduct: getProduct,
+      getProductById: getProductById
     };
     return service;
     function getProducts(paramsData) {
@@ -184,6 +185,9 @@
     }
     function getProduct(sku) {
       return Restangular.one('products/' + sku).customGET();
+    }
+    function getProductById(id) {
+      return Restangular.one('product-views/' + id).customGET();
     }
   }
 })();

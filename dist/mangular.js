@@ -184,10 +184,10 @@
       return Restangular.all(query).customGET();
     }
     function getProduct(sku) {
-      return Restangular.one('products/' + sku).customGET();
+      return Restangular.one('product-views/' + sku).customGET();
     }
     function getProductById(id) {
-      return Restangular.one('product-views/' + id).customGET();
+      return Restangular.one('product-views/id/' + id).customGET();
     }
   }
 })();

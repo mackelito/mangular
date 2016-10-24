@@ -1,6 +1,6 @@
 {
   "name": "mangular",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Angular service for Magento 2",
   "main": "./dist/mangular.js",
   "scripts": {

@@ -27,7 +27,9 @@
       getItems: getItems,
       addItem: addItem,
       removeItem: removeItem,
-      createNewCart: createNewCart
+      createNewCart: createNewCart,
+      getPaymentInformation: getPaymentInformation,
+      placeOrder: placeOrder
     };
     $localForage.getItem('cartId').then(function(id) {
       service.cartId = id;
@@ -86,6 +88,22 @@
       var cartId = createNewCart.post();
       return cartId;
     }
+    function getPaymentInformation(cartId) {
+      var getPaymentInformation = getCartId().then(function(id) {
+        return Restangular.all('guest-carts/' + id + '/payment-information').customGET();
+      });
+      return getPaymentInformation;
+    }
+    function placeOrder(cartId) {
+      var placeOrder = getCartId().then(function(id) {
+        cartId = id;
+        var orderData = getPaymentInformation().then(function(paymentinformation) {
+          return Restangular.one('guest-carts/' + cartId + '/order').customPUT(paymentinformation);
+        });
+        return orderData;
+      });
+      return placeOrder;
+    }
     $log.info('--- Cart service end ---');
   }
 })();
@@ -124,6 +142,30 @@
     return service;
     function getContent(url) {
       return ContentRestangular.one(url + '/content').customGET();
+    }
+  }
+})();
+
+(function() {
+  'use strict';
+  angular.module('mangular').service('Customer', Service);
+  Service.$inject = [ 'Restangular' ];
+  function Service(Restangular) {
+    var service = {
+      login: login,
+      logout: logout,
+      createAccount: createAccount
+    };
+    return service;
+    function login(user) {
+      console.log(user);
+      return Restangular.one('/customers/login').customPOST(user);
+    }
+    function logout(user) {
+      return Restangular.one('/customers/logout').customGET(user);
+    }
+    function createAccount(user) {
+      return Restangular.one('/customers/create-account').customPOST(user);
     }
   }
 })();

@@ -201,9 +201,8 @@
 (function() {
   'use strict';
   angular.module('mangular').service('Products', Service);
-  Service.$inject = [ 'Restangular', '$stateParams', '$log' ];
+  Service.$inject = [ 'Restangular', '$stateParams' ];
   function Service(Restangular, $stateParams, $log) {
-    this.$log = $log;
     var service = {
       getProducts: getProducts,
       getProduct: getProduct,
@@ -236,9 +235,9 @@
       return Restangular.one('product-views/id/' + id).customGET();
     }
     function getSimpleProduct(configurableProductId, options) {
-      const attributes = {};
+      var attributes = {};
       for (var i = 0; i < options.length; i++) {
-        const key = 'attributes[' + options[i].code + ']';
+        var key = 'attributes[' + options[i].code + ']';
         attributes[key] = options[i].id;
       }
       return Restangular.one('product-views/id/', configurableProductId).customGET('simple-product', attributes);

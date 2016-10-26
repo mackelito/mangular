@@ -52,10 +52,10 @@
         }
 
         function getSimpleProduct(configurableProductId, options) {
-            const attributes = {};
+            var attributes = {};
 
             for(var i = 0; i < options.length; i++){
-                const key = 'attributes[' + options[i].code + ']';
+                var key = 'attributes[' + options[i].code + ']';
                 attributes[key] = options[i].id;
             }
 

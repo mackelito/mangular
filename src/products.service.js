@@ -5,12 +5,10 @@
         .module('mangular')
         .service('Products', Service);
 
-    Service.$inject = ['Restangular', '$stateParams', '$log'];
+    Service.$inject = ['Restangular', '$stateParams'];
 
     /* @ngInject */
     function Service(Restangular, $stateParams, $log) {
-
-        this.$log = $log;
         var service = {
             getProducts: getProducts,
             getProduct: getProduct,

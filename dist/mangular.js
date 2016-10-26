@@ -24,10 +24,8 @@
     var service = {
       getCartId: getCartId,
       getCart: getCart,
-      getItems: getItems,
       addItem: addItem,
       removeItem: removeItem,
-      createNewCart: createNewCart,
       getPaymentInformation: getPaymentInformation,
       placeOrder: placeOrder
     };
@@ -68,17 +66,15 @@
       var data = {
         cartItem: {
           sku: product.sku,
-          qty: 1,
-          quote_id: cartId
+          qty: 1
         }
       };
-      Restangular.one('carts/add-to-cart').customPOST(data).then(function(response) {
+      Restangular.one('carts/add-to-cart').customPUT(data).then(function(response) {
         $log.info('cartUpdated:');
         $rootScope.$broadcast('cartUpdated', response);
       });
     }
     function removeItem(itemId) {
-      console.log(itemId);
       var cartItems = getCartId().then(function(cartId) {
         return Restangular.all('guest-carts/' + cartId + '/items/' + itemId).remove().then(function(response) {
           $log.info('cartUpdated:');
@@ -107,7 +103,6 @@
       });
       return placeOrder;
     }
-    $log.info('--- Cart service end ---');
   }
 })();
 
@@ -161,7 +156,6 @@
     };
     return service;
     function login(user) {
-      console.log(user);
       return Restangular.one('/customers/login').customPOST(user);
     }
     function logout(user) {
@@ -179,7 +173,6 @@
   Factory.$inject = [ '$window' ];
   function Factory($window) {
     var _ = $window._;
-    console.log('_ (lodash loaded)');
     return _;
   }
 })();

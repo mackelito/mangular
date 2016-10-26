@@ -19,7 +19,6 @@
         return service;
 
         function login(user) {
-            console.log(user);
             return Restangular.one('/customers/login').customPOST(user);
         }
 

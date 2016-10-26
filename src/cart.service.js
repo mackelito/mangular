@@ -13,10 +13,10 @@
         var service = {
             getCartId: getCartId,
             getCart: getCart,
-            getItems: getItems,
+            // getItems: getItems,
             addItem: addItem,
             removeItem: removeItem,
-            createNewCart: createNewCart,
+            // createNewCart: createNewCart,
             getPaymentInformation: getPaymentInformation,
             placeOrder: placeOrder
         };
@@ -65,15 +65,13 @@
         }
 
         function addItem(product, cartId) {
-          // carts/add-to-cart
           var data = {
               'cartItem': {
                   'sku': product.sku,
-                  'qty': 1,
-                  'quote_id': cartId
+                  'qty': 1
               }
           };
-          Restangular.one('carts/add-to-cart').customPOST(data)
+          Restangular.one('carts/add-to-cart').customPUT(data)
               .then(function(response) {
                   $log.info('cartUpdated:');
                   $rootScope.$broadcast('cartUpdated', response);
@@ -84,7 +82,6 @@
         }
 
         function removeItem(itemId) {
-            console.log(itemId);
             var cartItems = getCartId().then(function(cartId) {
                 return Restangular.all('guest-carts/' + cartId + '/items/' + itemId).remove()
                     .then(function(response) {
@@ -125,7 +122,5 @@
             });
             return placeOrder;
         }
-
-        $log.info('--- Cart service end ---');
     }
 })();

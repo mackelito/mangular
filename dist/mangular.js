@@ -201,8 +201,8 @@
 (function() {
   'use strict';
   angular.module('mangular').service('Products', Service);
-  Service.$inject = [ 'Restangular', '$stateParams', '$log', '$httpParamSerializer' ];
-  function Service(Restangular, $stateParams, $log, $httpParamSerializer) {
+  Service.$inject = [ 'Restangular', '$stateParams', '$log' ];
+  function Service(Restangular, $stateParams, $log) {
     this.$log = $log;
     var service = {
       getProducts: getProducts,

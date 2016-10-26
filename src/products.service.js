@@ -5,10 +5,10 @@
         .module('mangular')
         .service('Products', Service);
 
-    Service.$inject = ['Restangular', '$stateParams', '$log', '$httpParamSerializer'];
+    Service.$inject = ['Restangular', '$stateParams', '$log'];
 
     /* @ngInject */
-    function Service(Restangular, $stateParams, $log, $httpParamSerializer) {
+    function Service(Restangular, $stateParams, $log) {
 
         this.$log = $log;
         var service = {
@@ -28,13 +28,13 @@
             var catId = '';
             var noOfProducts = '';
 
-            if(params.category) {
+            if (params.category) {
                 catId = '&searchCriteria[filter_groups][0][filters][0][field]=' +
                     'category_id&searchCriteria[filter_groups][0][filters][0][value]=' +
                     params.category;
             }
 
-            if(params.limit) {
+            if (params.limit) {
                 noOfProducts = '[page_size]=' + params.limit;
             } else {
                 noOfProducts = '[page_size]=' + defaultNumberOfProducts;

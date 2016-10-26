@@ -12,7 +12,7 @@
 
         var service = {
             getCartId: getCartId,
-            getTotals: getTotals,
+            getCart: getCart,
             getItems: getItems,
             addItem: addItem,
             removeItem: removeItem,
@@ -33,10 +33,18 @@
 
         return service;
 
+        // TODO: Not needed?
         function getCartId() {
             return $localForage.getItem('cartId');
         }
 
+        function getCart() {
+            return Restangular.all('carts/my').withHttpConfig({
+                cache: false
+            }).customGET();
+        }
+
+        // TODO: remove
         function getTotals() {
             var getTotals = getCartId().then(function(id) {
                 return Restangular.all('guest-carts/' + id + '/totals').withHttpConfig({
@@ -46,6 +54,7 @@
             return getTotals;
         }
 
+        // TODO: Not needed?
         function getItems() {
             var cartItems = getCartId().then(function(id) {
                 return Restangular.all('guest-carts/' + id + '/items').withHttpConfig({
@@ -83,6 +92,7 @@
             });
         }
 
+        // TODO: Not needed?
         function createNewCart() {
             var createNewCart = Restangular.all('guest-carts');
             var cartId = createNewCart.post();

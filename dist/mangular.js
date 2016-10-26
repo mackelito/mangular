@@ -23,7 +23,7 @@
   function Factory(Restangular, $log, $localForage, $rootScope) {
     var service = {
       getCartId: getCartId,
-      getTotals: getTotals,
+      getCart: getCart,
       getItems: getItems,
       addItem: addItem,
       removeItem: removeItem,
@@ -42,6 +42,11 @@
     return service;
     function getCartId() {
       return $localForage.getItem('cartId');
+    }
+    function getCart() {
+      return Restangular.all('carts/my').withHttpConfig({
+        cache: false
+      }).customGET();
     }
     function getTotals() {
       var getTotals = getCartId().then(function(id) {

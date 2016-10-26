@@ -82,7 +82,6 @@
         }
 
         function removeItem(itemId) {
-            console.log(itemId);
             var cartItems = getCartId().then(function(cartId) {
                 return Restangular.all('guest-carts/' + cartId + '/items/' + itemId).remove()
                     .then(function(response) {

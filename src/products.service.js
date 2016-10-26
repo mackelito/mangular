@@ -1,19 +1,21 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('mangular')
         .service('Products', Service);
 
-    Service.$inject = ['Restangular', '$stateParams', '$log'];
+    Service.$inject = ['Restangular', '$stateParams', '$log', '$httpParamSerializer'];
 
     /* @ngInject */
-    function Service(Restangular, $stateParams, $log) {
+    function Service(Restangular, $stateParams, $log, $httpParamSerializer) {
 
+        this.$log = $log;
         var service = {
             getProducts: getProducts,
             getProduct: getProduct,
-            getProductById: getProductById
+            getProductById: getProductById,
+            getSimpleProduct: getSimpleProduct
         };
 
         return service;
@@ -26,13 +28,13 @@
             var catId = '';
             var noOfProducts = '';
 
-            if (params.category) {
+            if(params.category) {
                 catId = '&searchCriteria[filter_groups][0][filters][0][field]=' +
                     'category_id&searchCriteria[filter_groups][0][filters][0][value]=' +
                     params.category;
             }
 
-            if (params.limit) {
+            if(params.limit) {
                 noOfProducts = '[page_size]=' + params.limit;
             } else {
                 noOfProducts = '[page_size]=' + defaultNumberOfProducts;
@@ -51,6 +53,16 @@
             return Restangular.one('product-views/id/' + id).customGET();
         }
 
+        function getSimpleProduct(configurableProductId, options) {
+            const attributes = {};
 
+            for(var i = 0; i < options.length; i++){
+                const key = 'attributes[' + options[i].code + ']';
+                attributes[key] = options[i].id;
+            }
+
+            return Restangular.one('product-views/id/', configurableProductId)
+                .customGET('simple-product', attributes);
+        }
     }
 })();

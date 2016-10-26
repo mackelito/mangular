@@ -26,7 +26,7 @@
     "maxlen": 120,
     "asi": false,
     "boss": false,
-    "debug": false,
+    "debug": true,
     "eqnull": true,
     "esnext": false,
     "evil": false,

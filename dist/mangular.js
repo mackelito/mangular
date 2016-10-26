@@ -80,7 +80,6 @@
       });
     }
     function removeItem(itemId) {
-      console.log(itemId);
       var cartItems = getCartId().then(function(cartId) {
         return Restangular.all('guest-carts/' + cartId + '/items/' + itemId).remove().then(function(response) {
           $log.info('cartUpdated:');
@@ -163,7 +162,6 @@
     };
     return service;
     function login(user) {
-      console.log(user);
       return Restangular.one('/customers/login').customPOST(user);
     }
     function logout(user) {
@@ -181,7 +179,6 @@
   Factory.$inject = [ '$window' ];
   function Factory($window) {
     var _ = $window._;
-    console.log('_ (lodash loaded)');
     return _;
   }
 })();
@@ -204,12 +201,14 @@
 (function() {
   'use strict';
   angular.module('mangular').service('Products', Service);
-  Service.$inject = [ 'Restangular', '$stateParams', '$log' ];
-  function Service(Restangular, $stateParams, $log) {
+  Service.$inject = [ 'Restangular', '$stateParams', '$log', '$httpParamSerializer' ];
+  function Service(Restangular, $stateParams, $log, $httpParamSerializer) {
+    this.$log = $log;
     var service = {
       getProducts: getProducts,
       getProduct: getProduct,
-      getProductById: getProductById
+      getProductById: getProductById,
+      getSimpleProduct: getSimpleProduct
     };
     return service;
     function getProducts(paramsData) {
@@ -235,6 +234,14 @@
     }
     function getProductById(id) {
       return Restangular.one('product-views/id/' + id).customGET();
+    }
+    function getSimpleProduct(configurableProductId, options) {
+      const attributes = {};
+      for (var i = 0; i < options.length; i++) {
+        const key = 'attributes[' + options[i].code + ']';
+        attributes[key] = options[i].id;
+      }
+      return Restangular.one('product-views/id/', configurableProductId).customGET('simple-product', attributes);
     }
   }
 })();

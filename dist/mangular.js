@@ -65,18 +65,16 @@
       return cartItems;
     }
     function addItem(product, cartId) {
-      $localForage.getItem('cartId').then(function(cartId) {
-        var data = {
-          cartItem: {
-            sku: product.sku,
-            qty: 1,
-            quote_id: cartId
-          }
-        };
-        Restangular.one('guest-carts').one(cartId).one('items').customPOST(data).then(function(response) {
-          $log.info('cartUpdated:');
-          $rootScope.$broadcast('cartUpdated', response);
-        });
+      var data = {
+        cartItem: {
+          sku: product.sku,
+          qty: 1,
+          quote_id: cartId
+        }
+      };
+      Restangular.one('carts/add-to-cart').customPOST(data).then(function(response) {
+        $log.info('cartUpdated:');
+        $rootScope.$broadcast('cartUpdated', response);
       });
     }
     function removeItem(itemId) {

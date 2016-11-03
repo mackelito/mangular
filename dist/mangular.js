@@ -166,7 +166,8 @@
       loggedInCustomer: function() {
         return loggedInCustomer;
       },
-      setNewPassword: setNewPassword
+      setNewPassword: setNewPassword,
+      resetPassword: resetPassword
     };
     return service;
     function login(user) {
@@ -190,7 +191,16 @@
       });
     }
     function setNewPassword(form) {
-      return Restangular.one('/customers/reset-password').customPUT(form);
+      return Restangular.one('/customers/reset-password').customPUT(form).then(function(result) {
+        loggedInCustomer = result;
+        return result;
+      });
+    }
+    function resetPassword(email) {
+      return Restangular.one('/customers/password').customPUT({
+        email: email,
+        template: 'email_reset'
+      });
     }
   }
 })();

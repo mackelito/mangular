@@ -156,6 +156,9 @@
   Service.$inject = [ 'Restangular' ];
   function Service(Restangular) {
     var loggedInCustomer;
+    Restangular.one('/customers/me').customGET().then(function(result) {
+      loggedInCustomer = result;
+    });
     var service = {
       login: login,
       logout: logout,

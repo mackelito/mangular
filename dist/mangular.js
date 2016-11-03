@@ -162,7 +162,8 @@
       createAccount: createAccount,
       loggedInCustomer: function() {
         return loggedInCustomer;
-      }
+      },
+      setNewPassword: setNewPassword
     };
     return service;
     function login(user) {
@@ -184,6 +185,9 @@
         loggedInCustomer = result;
         return result;
       });
+    }
+    function setNewPassword(form) {
+      return Restangular.one('/customers/reset-password').customPUT(form);
     }
   }
 })();
